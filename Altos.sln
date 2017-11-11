@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altos", "Assembly-CSharp.csproj", "{A51295D4-9BEF-C5E7-6AB1-04CA62B91EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altos", "Assembly-CSharp-Editor.csproj", "{086C623C-72AD-FC2F-5248-FB4A33639323}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A51295D4-9BEF-C5E7-6AB1-04CA62B91EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51295D4-9BEF-C5E7-6AB1-04CA62B91EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51295D4-9BEF-C5E7-6AB1-04CA62B91EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51295D4-9BEF-C5E7-6AB1-04CA62B91EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{086C623C-72AD-FC2F-5248-FB4A33639323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{086C623C-72AD-FC2F-5248-FB4A33639323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{086C623C-72AD-FC2F-5248-FB4A33639323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{086C623C-72AD-FC2F-5248-FB4A33639323}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,159 @@
+fileFormatVersion: 2
+guid: c5f1f45e2107d73439ca0ca27f58ade0
+timeCreated: 1495990411
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Tree3
+    100002: Tree3LOD1
+    100004: Tree3LOD2
+    100006: Tree3Stage1
+    100008: Tree3Stage1LOD1
+    100010: Tree3Stage1LOD2
+    100012: Tree3Stage1Stub
+    100014: Tree3Stage2
+    100016: Tree3Stage2LOD1
+    100018: Tree3Stage2LOD2
+    100020: Tree3Stage2Stub
+    100022: Tree3Stage3
+    100024: Tree3Stage3LOD1
+    100026: Tree3Stage3LOD2
+    100028: Tree3Stage3Stub
+    100030: Tree3Stub
+    100032: //RootNode
+    400000: Tree3
+    400002: Tree3LOD1
+    400004: Tree3LOD2
+    400006: Tree3Stage1
+    400008: Tree3Stage1LOD1
+    400010: Tree3Stage1LOD2
+    400012: Tree3Stage1Stub
+    400014: Tree3Stage2
+    400016: Tree3Stage2LOD1
+    400018: Tree3Stage2LOD2
+    400020: Tree3Stage2Stub
+    400022: Tree3Stage3
+    400024: Tree3Stage3LOD1
+    400026: Tree3Stage3LOD2
+    400028: Tree3Stage3Stub
+    400030: Tree3Stub
+    400032: //RootNode
+    2300000: Tree3
+    2300002: Tree3LOD1
+    2300004: Tree3LOD2
+    2300006: Tree3Stage1
+    2300008: Tree3Stage1LOD1
+    2300010: Tree3Stage1LOD2
+    2300012: Tree3Stage1Stub
+    2300014: Tree3Stage2
+    2300016: Tree3Stage2LOD1
+    2300018: Tree3Stage2LOD2
+    2300020: Tree3Stage2Stub
+    2300022: Tree3Stage3
+    2300024: Tree3Stage3LOD1
+    2300026: Tree3Stage3LOD2
+    2300028: Tree3Stage3Stub
+    2300030: Tree3Stub
+    3300000: Tree3
+    3300002: Tree3LOD1
+    3300004: Tree3LOD2
+    3300006: Tree3Stage1
+    3300008: Tree3Stage1LOD1
+    3300010: Tree3Stage1LOD2
+    3300012: Tree3Stage1Stub
+    3300014: Tree3Stage2
+    3300016: Tree3Stage2LOD1
+    3300018: Tree3Stage2LOD2
+    3300020: Tree3Stage2Stub
+    3300022: Tree3Stage3
+    3300024: Tree3Stage3LOD1
+    3300026: Tree3Stage3LOD2
+    3300028: Tree3Stage3Stub
+    3300030: Tree3Stub
+    4300000: Tree3Stage1Stub
+    4300002: Tree3Stage2Stub
+    4300004: Tree3Stage3Stub
+    4300006: Tree3Stub
+    4300008: Tree3Stage3LOD2
+    4300010: Tree3Stage3LOD1
+    4300012: Tree3Stage2LOD2
+    4300014: Tree3Stage2LOD1
+    4300016: Tree3Stage1LOD2
+    4300018: Tree3Stage1LOD1
+    4300020: Tree3Stage1
+    4300022: Tree3Stage2
+    4300024: Tree3Stage3
+    4300026: Tree3LOD2
+    4300028: Tree3LOD1
+    4300030: Tree3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
