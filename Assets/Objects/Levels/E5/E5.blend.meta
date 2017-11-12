@@ -1,0 +1,183 @@
+fileFormatVersion: 2
+guid: c68ae2f17a169514cab04628c2343e37
+timeCreated: 1510485851
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: E51
+    100004: E51_001
+    100006: E52
+    100008: E52_001
+    100010: E53
+    100012: E53_001
+    100014: E54
+    100016: E54_001
+    100018: E55
+    100020: E55_001
+    100022: E56
+    100024: E56_001
+    100026: E57
+    100028: E57_001
+    100030: E58
+    100032: E58_001
+    100034: E59
+    100036: E59_001
+    100038: E8
+    100040: E8_MeshPart0
+    100042: E8_MeshPart1
+    400000: //RootNode
+    400002: E51
+    400004: E51_001
+    400006: E52
+    400008: E52_001
+    400010: E53
+    400012: E53_001
+    400014: E54
+    400016: E54_001
+    400018: E55
+    400020: E55_001
+    400022: E56
+    400024: E56_001
+    400026: E57
+    400028: E57_001
+    400030: E58
+    400032: E58_001
+    400034: E59
+    400036: E59_001
+    400038: E8
+    400040: E8_MeshPart0
+    400042: E8_MeshPart1
+    2300000: E51
+    2300002: E51_001
+    2300004: E52
+    2300006: E52_001
+    2300008: E53
+    2300010: E53_001
+    2300012: E54
+    2300014: E54_001
+    2300016: E55
+    2300018: E55_001
+    2300020: E56
+    2300022: E56_001
+    2300024: E57
+    2300026: E57_001
+    2300028: E58
+    2300030: E58_001
+    2300032: E59
+    2300034: E59_001
+    2300036: E8_MeshPart0
+    2300038: E8_MeshPart1
+    3300000: E51
+    3300002: E51_001
+    3300004: E52
+    3300006: E52_001
+    3300008: E53
+    3300010: E53_001
+    3300012: E54
+    3300014: E54_001
+    3300016: E55
+    3300018: E55_001
+    3300020: E56
+    3300022: E56_001
+    3300024: E57
+    3300026: E57_001
+    3300028: E58
+    3300030: E58_001
+    3300032: E59
+    3300034: E59_001
+    3300036: E8_MeshPart0
+    3300038: E8_MeshPart1
+    4300000: E57_001
+    4300002: E8_MeshPart0
+    4300004: E8_MeshPart1
+    4300006: E59_001
+    4300008: E58_001
+    4300010: E56_001
+    4300012: E55_001
+    4300014: E54_001
+    4300016: E53_001
+    4300018: E52_001
+    4300020: E51_001
+    4300022: E51
+    4300024: E52
+    4300026: E53
+    4300028: E54
+    4300030: E55
+    4300032: E56
+    4300034: E57
+    4300036: E58
+    4300038: E59
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
