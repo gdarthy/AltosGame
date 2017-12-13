@@ -46,6 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\LowPolyTerrain\LowPolyHeightmap.cs" />
+     <Compile Include="Assets\LowPolyTerrain\LowPolyHelper.cs" />
+     <Compile Include="Assets\LowPolyTerrain\LowPolyTerrain.cs" />
+     <Compile Include="Assets\LowPolyTerrain\LowPolyTerrainObjects.cs" />
+     <Compile Include="Assets\LowPolyTerrain\LowPolyUtils.cs" />
      <Compile Include="Assets\Objects\Levels\ZoneStatus.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
@@ -108,6 +113,7 @@
      <Compile Include="Assets\Scripts\ForestGenerator.cs" />
      <Compile Include="Assets\Scripts\Interactable.cs" />
      <Compile Include="Assets\Scripts\Items\Chest.cs" />
+     <Compile Include="Assets\Scripts\Items\EnableTreeInEditor.cs" />
      <Compile Include="Assets\Scripts\Items\ForestController.cs" />
      <Compile Include="Assets\Scripts\Items\Highlight.cs" />
      <Compile Include="Assets\Scripts\Items\IEquipable.cs" />
@@ -131,7 +137,12 @@
      <Compile Include="Assets\Scripts\UI\OptionPanelManager.cs" />
      <Compile Include="Assets\Scripts\UI\PlayerUIMenu.cs" />
      <Compile Include="Assets\Scripts\UI\PlayerUIMenuManager.cs" />
+     <Compile Include="Assets\nTools\PrefabPainter\Scripts\PrefabPainterSceneSettings.cs" />
+     <Compile Include="Assets\nTools\PrefabPainter\Scripts\PrefabPainterSettings.cs" />
+     <Compile Include="Assets\nTools\PrefabPainter\Scripts\Utility.cs" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />
+     <None Include="Assets\LowPolyTerrain\Shaders\DiffSpecFadeVertexColor.shader" />
+     <None Include="Assets\LowPolyTerrain\Shaders\StandardFadeVertexColor.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Fog.shader" />
      <None Include="Assets\PostProcessing\Editor Resources\Monitors\ParadeRender.shader" />
@@ -140,6 +151,7 @@
      <None Include="Assets\PostProcessing\Editor Resources\UI\CurveBackground.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceReflection.shader" />
      <None Include="Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
+     <None Include="Assets\LowPolyTerrain\Shaders\DiffSpecOpaqueVertexColor.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\ACES.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
      <None Include="Assets\Shaders\Outline.shader" />
@@ -150,29 +162,41 @@
      <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />
      <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeCompute.compute" />
      <None Include="Assets\PostProcessing\Resources\Shaders\FXAA3.cginc" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Decal.xml" />
+     <None Include="Assets\LowPolyTerrain\readme.txt" />
      <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.shader" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Tree Multibrush.xml" />
+     <None Include="Assets\LowPolyTerrain\Shaders\DiffuseOpaqueVertexColor.shader" />
      <None Include="Assets\PostProcessing\Resources\Bluenoise64\LICENSE.txt" />
      <None Include="Assets\PostProcessing\Resources\Shaders\BuiltinDebugViews.shader" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Tree.xml" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Common.cginc" />
      <None Include="Assets\PostProcessing\Resources\Bluenoise64\COPYING.txt" />
      <None Include="Assets\PostProcessing\Editor Resources\UI\Trackball.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\TAA.shader" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Decal Footsteps.xml" />
      <None Include="Assets\PostProcessing\Resources\Shaders\EyeHistogram.compute" />
      <None Include="Assets\PostProcessing\Resources\Shaders\TAA.cginc" />
      <None Include="Assets\Shaders\vertex animation.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.cginc" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Random.xml" />
      <None Include="Assets\PostProcessing\Resources\Shaders\GrainGen.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\FXAA.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DiskKernels.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
      <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceRaytrace.cginc" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Stones.xml" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.shader" />
      <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeRender.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\ColorGrading.cginc" />
+     <None Include="Assets\LowPolyTerrain\Shaders\StandardOpaqueVertexColor.shader" />
+     <None Include="Assets\nTools\PrefabPainter\Docs\changelog.txt" />
      <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.cginc" />
+     <None Include="Assets\LowPolyTerrain\Shaders\DiffuseFadeVertexColor.shader" />
+     <None Include="Assets\nTools\PrefabPainter\Presets\Decal Along Stroke.xml" />
      <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformCompute.compute" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
             // If we hit
             if (Physics.Raycast(ray, out hit, movementMask))
             {
+                Debug.Log("Hit: " + hit.transform.name);
                 if (hit.transform.GetComponent<BasicObject>().IsInteractable())
                 {
                     hit.transform.GetComponent<IInteractable>().Interact(hit.point);
