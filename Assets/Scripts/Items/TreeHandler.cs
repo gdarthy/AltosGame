@@ -1,8 +1,13 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 
-public class TreeHandler : Interactable {
+public class TreeHandler : Extractable {
 
+    protected override void Start()
+    {
+        base.Start();
+        requiredTool = ToolType.Axe;
+    }
     protected override void PerformInteraction()
     {
         Debug.Log("Interacted with tree");
@@ -14,5 +19,10 @@ public class TreeHandler : Interactable {
     {
         AddWalkHereButton(position);
         AddInteractionButton(position, "Cut Down");
+    }
+
+    public override ToolType GetRequiredTool()
+    {
+        return requiredTool;
     }
 }

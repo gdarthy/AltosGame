@@ -114,9 +114,11 @@
      <Compile Include="Assets\Scripts\Interactable.cs" />
      <Compile Include="Assets\Scripts\Items\Chest.cs" />
      <Compile Include="Assets\Scripts\Items\EnableTreeInEditor.cs" />
+     <Compile Include="Assets\Scripts\Items\Extractable.cs" />
      <Compile Include="Assets\Scripts\Items\ForestController.cs" />
      <Compile Include="Assets\Scripts\Items\Highlight.cs" />
      <Compile Include="Assets\Scripts\Items\IEquipable.cs" />
+     <Compile Include="Assets\Scripts\Items\IExtractable.cs" />
      <Compile Include="Assets\Scripts\Items\IInteractable.cs" />
      <Compile Include="Assets\Scripts\Items\IStorage.cs" />
      <Compile Include="Assets\Scripts\Items\Item.cs" />

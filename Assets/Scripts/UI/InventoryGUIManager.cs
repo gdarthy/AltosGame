@@ -22,18 +22,18 @@ public class InventoryGUIManager : MonoBehaviour
     {
         screenHeight = Screen.height;
 
-        take = transform.Find("TakeButton").GetComponent<RectTransform>();
-        takeAll = transform.Find("TakeAllButton").GetComponent<RectTransform>();
-        use = transform.Find("UseButton").GetComponent<RectTransform>();
-        remove = transform.Find("RemoveButton").GetComponent<RectTransform>();
-        store = transform.Find("StoreButton").GetComponent<RectTransform>();
+        take = GameObject.Find("TakeButton").GetComponent<RectTransform>();
+        takeAll = GameObject.Find("TakeAllButton").GetComponent<RectTransform>();
+        use = GameObject.Find("UseButton").GetComponent<RectTransform>();
+        remove = GameObject.Find("RemoveButton").GetComponent<RectTransform>();
+        store = GameObject.Find("StoreButton").GetComponent<RectTransform>();
 
         inventorySelection = transform.Find("InventorySelectionBorder").GetComponent<RectTransform>();
 
         playerInventoryToggle = inventorySelection.transform.GetChild(0).transform.Find("PlayerInventory").GetComponent<Toggle>();
         nonPlayerInventoryToggle = inventorySelection.transform.GetChild(0).transform.Find("StorageInventory").GetComponent<Toggle>();
 
-        hidePos = -screenHeight;
+        hidePos = 20;
         showPos = buttonTopMargin;
     }
 
@@ -70,52 +70,62 @@ public class InventoryGUIManager : MonoBehaviour
 
     public void ShowUseButton()
     {
-        use.anchoredPosition = new Vector2(use.anchoredPosition.x, showPos);
+        use.GetComponent<LayoutElement>().ignoreLayout = false;
+        use.pivot = new Vector2(use.pivot.x, showPos);
     }
 
     public void HideUseButton()
     {
-        use.anchoredPosition = new Vector2(use.anchoredPosition.x, hidePos);
+        use.GetComponent<LayoutElement>().ignoreLayout = true;
+        use.pivot = new Vector2(use.pivot.x, hidePos);
     }
 
     public void ShowStoreButton()
     {
-        store.anchoredPosition = new Vector2(store.anchoredPosition.x, showPos);
+        store.GetComponent<LayoutElement>().ignoreLayout = false;
+        store.pivot = new Vector2(store.pivot.x, showPos);
     }
 
     public void HideStoreButton()
     {
-        store.anchoredPosition = new Vector2(store.anchoredPosition.x, hidePos);
+        store.GetComponent<LayoutElement>().ignoreLayout = true;
+        store.pivot = new Vector2(store.pivot.x, hidePos);
     }
 
     public void ShowRemoveButton()
     {
-        remove.anchoredPosition = new Vector2(remove.anchoredPosition.x, showPos);
+        remove.GetComponent<LayoutElement>().ignoreLayout = false;
+        remove.pivot = new Vector2(remove.pivot.x, showPos);
     }
 
     public void HideRemoveButton()
     {
-        remove.anchoredPosition = new Vector2(remove.anchoredPosition.x, hidePos);
+        remove.GetComponent<LayoutElement>().ignoreLayout = true;
+        remove.pivot = new Vector2(remove.pivot.x, hidePos);
     }
 
     public void ShowTakeButton()
     {
-        take.anchoredPosition = new Vector2(take.anchoredPosition.x, showPos);
+        take.GetComponent<LayoutElement>().ignoreLayout = false;
+        take.pivot = new Vector2(take.pivot.x, showPos);
     }
 
     public void HideTakeButton()
     {
-        take.anchoredPosition = new Vector2(take.anchoredPosition.x, hidePos);
+        take.GetComponent<LayoutElement>().ignoreLayout = true;
+        take.pivot = new Vector2(take.pivot.x, hidePos);
     }
 
     public void ShowTakeAllButton()
     {
-        takeAll.anchoredPosition = new Vector2(takeAll.anchoredPosition.x, showPos);
+        takeAll.GetComponent<LayoutElement>().ignoreLayout = false;
+        takeAll.pivot = new Vector2(takeAll.pivot.x, showPos);
     }
 
     public void HideTakeAllButton()
     {
-        takeAll.anchoredPosition = new Vector2(takeAll.anchoredPosition.x, hidePos);
+        takeAll.GetComponent<LayoutElement>().ignoreLayout = true;
+        takeAll.pivot = new Vector2(takeAll.pivot.x, hidePos);
     }
 
     public void ShowInventory()

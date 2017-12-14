@@ -45,7 +45,7 @@ public class PlayerMotor : MonoBehaviour
     void Update()
     {
 
-        if (pending && agent.remainingDistance < agent.stoppingDistance && !EventSystem.current.IsPointerOverGameObject())
+        if (pending && agent.remainingDistance <= agent.stoppingDistance && !EventSystem.current.IsPointerOverGameObject())
         {
             if (Reached != null) Reached();
             pending = false;

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public interface IInteractable {
 
@@ -8,4 +6,5 @@ public interface IInteractable {
 
     void ShowGUI(Vector3 position);
 
+    InteractableType GetInteractableType();
 }

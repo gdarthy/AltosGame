@@ -6,26 +6,90 @@ using UnityEngine;
 public class Equipment : MonoBehaviour
 {
 
-    List<ItemHolder> equipment = new List<ItemHolder>();
+    GameObject[] equipment = new GameObject[(int)EquipmentType.Lenght];
+
+    bool isEquipped;
 
     public void Equip(ItemHolder item)
     {
-        Debug.Log(item.itemResource + " : " + item.equipmentType.ToString());
-        GameObject itemObject = Resources.Load<GameObject>("Objects/Items/" + item.itemType + "/" + item.itemResource);
+        Debug.Log("Equipping: " + item.itemResource + " : " + item.equipmentType.ToString());
+        GameObject itemObject = BasicObject.GetObjectFromResources(item);
+        int itemTypeInt = (int)item.equipmentType;
+        isEquipped = false;
+
         if (itemObject != null)
-            Instantiate(itemObject, GameObject.Find(item.equipmentType.ToString()).transform);
+        {
+            GameObject _item = Instantiate(itemObject, GetEquipmentParent(item));
+            _item.GetComponent<Item>().Alive(true, item);
+
+            if (equipment[itemTypeInt] == null)
+                equipment[itemTypeInt] = _item;
+            else if (equipment[itemTypeInt] == _item)
+            {
+                isEquipped = true;
+            }
+            else
+                Unequip(equipment[itemTypeInt].GetComponent<Item>().itemHolder);
+
+            if (!isEquipped)
+            {
+                equipment[itemTypeInt] = _item;
+
+                item.SwitchEquipAction();
+            }
+            else
+            {
+                Debug.Log("Equipment: Item already equipped");
+            }
+        }
         else
             Debug.Log("Equipment: Item not found");
     }
 
-    public void Unequip()
+    public void Unequip(ItemHolder item)
     {
-
+        Destroy(GetEquipmentParent(item).transform.GetChild(0).gameObject);
+        equipment[(int)item.equipmentType] = null;
+        item.SwitchEquipAction();
     }
+
+    public bool IsEquipped(ItemHolder item)
+    {
+        if (equipment[(int)item.equipmentType] == null)
+        {
+            return false;
+        }
+        return equipment[(int)item.equipmentType].GetComponent<Item>().itemHolder == item;
+    }
+
+    Transform GetEquipmentParent(ItemHolder item)
+    {
+        if (item.equipmentType == EquipmentType.None)
+        {
+            Debug.Log("No parent");
+            return null;
+        }
+        else
+            return GameObject.Find(item.equipmentType.ToString()).transform;
+    }
+
+    public Item GetEquipedItem(EquipmentType equipmentType)
+    {
+        if (equipment[(int)equipmentType] != null)
+        {
+            return equipment[(int)equipmentType].GetComponent<Item>();
+        }else
+        {
+            return null;
+        }
+    }
+
+
 }
 
 public enum EquipmentType
 {
+    None,
     Head,
     Chest,
     Legs,
@@ -33,5 +97,6 @@ public enum EquipmentType
     HandLeft,
     HandRight,
     ArmLeft,
-    ArmRight
+    ArmRight,
+    Lenght
 }

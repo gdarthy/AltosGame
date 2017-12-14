@@ -5,5 +5,12 @@ using UnityEngine;
 
 public class Tool : Item
 {
+    [Header("Tool")]
+    public ToolType toolType;
+}
 
+public enum ToolType
+{
+    Axe,
+    Pickaxe
 }

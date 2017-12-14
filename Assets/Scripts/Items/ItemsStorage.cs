@@ -6,7 +6,16 @@ public class ItemsStorage : Interactable
     [Header("ItemsStorage")]
     public InventoryManager inventory;
 
-    
+    protected override void Start()
+    {
+        base.Start();
+        interactableType = InteractableType.Lootable;
+    }
+
+    public override InteractableType GetInteractableType()
+    {
+        return interactableType;
+    }
 
     protected override void PerformInteraction()
     {

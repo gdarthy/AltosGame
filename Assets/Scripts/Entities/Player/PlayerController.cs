@@ -38,10 +38,54 @@ public class PlayerController : MonoBehaviour
             // If we hit
             if (Physics.Raycast(ray, out hit, movementMask))
             {
-                Debug.Log("Hit: " + hit.transform.name);
+                //Debug.Log("Hit: " + hit.transform.name);
                 if (hit.transform.GetComponent<BasicObject>().IsInteractable())
                 {
-                    hit.transform.GetComponent<IInteractable>().Interact(hit.point);
+                    IInteractable _object = hit.transform.GetComponent<IInteractable>();
+                    switch (_object.GetInteractableType())
+                    {
+                        case InteractableType.None:
+                            Debug.Log("Interaction not set");
+                            break;
+                        case InteractableType.Extractable:
+                            Item inRightHand = GetComponent<Equipment>().GetEquipedItem(EquipmentType.HandRight);
+                            Item inLeftHand = GetComponent<Equipment>().GetEquipedItem(EquipmentType.HandLeft);
+                            Tool tool = null;
+                            if (inRightHand != null && inRightHand.itemHolder.itemType == ItemType.Tools)
+                            {
+                                Debug.Log("Tool in right");
+                                tool = (Tool)inRightHand;
+                            }else
+                            {
+                                if (inLeftHand != null && inLeftHand.itemHolder.itemType == ItemType.Tools)
+                                {
+                                    Debug.Log("Tool in left");
+                                    tool = (Tool)inLeftHand;
+                                }
+                                else
+                                {
+                                    Debug.Log("No Tool!");
+                                    tool = null;
+                                }
+                            }
+                            if (tool != null && hit.transform.GetComponent<IExtractable>().GetRequiredTool() == tool.toolType)
+                            {
+                                _object.Interact(hit.point);
+                            }
+
+                            break;
+                        case InteractableType.Pickable:
+                            _object.Interact(hit.point);
+                            break;
+                        case InteractableType.Attackable:
+                            break;
+                        case InteractableType.Lootable:
+                            _object.Interact(hit.point);
+                            break;
+                        default:
+                            break;
+                    }
+                    //
                 }
                 else
                 {
@@ -66,6 +110,9 @@ public class PlayerController : MonoBehaviour
                 if (hit.transform.GetComponent<BasicObject>().IsInteractable())
                 {
                     hit.transform.GetComponent<IInteractable>().ShowGUI(hit.point);
+                }else
+                {
+                    Debug.Log("Hit object is not interactable");
                 }
                 
             }

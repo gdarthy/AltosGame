@@ -12,11 +12,13 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     List<ItemContainer> itemContainers = new List<ItemContainer>();
 
-    public Details detailsPanel;
+    Details detailsPanel;
     public Transform toggles;
     ItemContainer selected;
     bool inNonPlayerInventory;
     bool anotherInventory = false;
+
+    bool debugging = false;
 
     void Awake()
     {
@@ -34,6 +36,14 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
         inventoryGUIManager.HideInventory();
     }
 
+    void _Debug(object message)
+    {
+        if (debugging)
+        {
+            Debug.Log(message);
+        }
+    }
+
     void Start()
     {
         detailsPanel = GameObject.Find("Details").GetComponent<Details>();
@@ -41,17 +51,18 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     public void OpenInventory(IStorage nonPlayerInventory)
     {
+        _Debug("OpenInventory(IStorage)");
         this.nonPlayerInventory = nonPlayerInventory;
         UpdateList(nonPlayerInventory.GetItemList());
         inNonPlayerInventory = true;
         anotherInventory = true;
         inventoryGUIManager.InventorySelectionPanel(false);
-
         inventoryGUIManager.ShowInventory();
     }
 
     public void OpenInventory()
     {
+        _Debug("OpenInventory()");
         UpdateList(PlayerInventoryHolder.Instance.GetItemList());
         inNonPlayerInventory = false;
         anotherInventory = false;
@@ -61,6 +72,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     public void PlayerInventory()
     {
+        _Debug("PlayerInventory()");
         inNonPlayerInventory = false;
         inventoryGUIManager.HideAllButtons();
         inventoryGUIManager.HideTakeAllButton();
@@ -69,6 +81,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     public void NonPlayerInventory()
     {
+        _Debug("NonPlayerInventory()");
         inNonPlayerInventory = true;
         UpdateList(nonPlayerInventory.GetItemList());
         inventoryGUIManager.HideAllButtons();
@@ -77,6 +90,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     void SetToggles(List<ItemHolder> itemList)
     {
+        _Debug("SetToggles(List<ItemHolder>)");
         foreach (Transform item in toggles)
         {
             item.GetComponent<Toggle>().isOn = false;
@@ -89,6 +103,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     void ClearInventoryItemList()
     {
+        _Debug("ClearInventoryItemList()");
         foreach (ItemContainer item in itemContainers)
         {
             Destroy(item.gameObject);
@@ -98,19 +113,45 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     void CreateInventoryItemList(List<ItemHolder> itemList)
     {
-        foreach (ItemHolder item in itemList)
+        _Debug("CreateInventoryItemList(List<ItemHolder>)");
+        if (itemList.Count > 0)
         {
-            AddItem(item);
+            _Debug("-ItemList count " + itemList.Count);
+            foreach (ItemHolder item in itemList)
+            {
+                if (item != null)
+                {
+                    AddItem(item);
+                }
+                else
+                {
+                    Debug.Log("--Item is null");
+                    break;
+                }
+            }
         }
+        else
+        {
+            _Debug("-Nothing in ItemList");
+        }
+
     }
 
     void AddItem(ItemHolder item)
     {
+        _Debug("AddItem(ItemHolder)");
         ItemContainer temp = null;
         ItemContainer itemContainer = Resources.Load<ItemContainer>("UI/Item");
-        temp = Instantiate(itemContainer, GameObject.Find(item.itemType + "Panel").transform);
-        temp.InitItemContainer(item);
-        itemContainers.Add(temp);
+        if (itemContainer != null || item != null)
+        {
+            temp = Instantiate(itemContainer, GameObject.Find(item.itemType + "Panel").transform);
+            temp.InitItemContainer(item);
+            itemContainers.Add(temp);
+        }
+        else
+        {
+            Debug.Log("Something is null" + temp + "or " + item);
+        }
     }
 
     public void OnSelect(ItemContainer itemContainer)
@@ -134,6 +175,10 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
     {
         selected = null;
         inventoryGUIManager.HideAllButtons();
+        if (!inNonPlayerInventory || itemContainers.Count == 0)
+        {
+            inventoryGUIManager.HideTakeAllButton();
+        }
         detailsPanel.SetDefault();
     }
 
@@ -172,6 +217,11 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
                 break;
             case ActionType.Equip:
                 GameObject.FindGameObjectWithTag("Player").GetComponent<Equipment>().Equip(selected.Item);
+                inventoryGUIManager.SetUseAction(selected.Item.actionType.ToString());
+                break;
+            case ActionType.Unequip:
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Equipment>().Unequip(selected.Item);
+                inventoryGUIManager.SetUseAction(selected.Item.actionType.ToString());
                 break;
             case ActionType.Read:
                 break;
@@ -186,7 +236,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
     {
         if (selected != null)
         {
-            PlayerInventoryHolder.Instance.RemoveItemFromInventory(selected.Item);
+            PlayerInventoryHolder.Instance.DropItem(selected.Item);
             UpdateList(PlayerInventoryHolder.Instance.GetItemList());
         }
     }
@@ -208,6 +258,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     void UpdateList(List<ItemHolder> itemList)
     {
+        _Debug("UpdateList(List<ItemHolder>)");
         ClearInventoryItemList();
         SetToggles(itemList);
         CreateInventoryItemList(itemList);

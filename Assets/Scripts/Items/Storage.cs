@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Storage : BasicObject {
+public class Storage : MonoBehaviour {
 
     [Header("Storage")]
     public int storageCapacity;

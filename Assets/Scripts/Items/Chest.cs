@@ -8,7 +8,7 @@ public class Chest : Storage, IStorage
     public string chestName;
     public List<ItemHolder> content;
 
-    new void Start()
+    void Start()
     {
         content = new List<ItemHolder>(storageCapacity);
         ItemHolder item1 = new ItemHolder("Hatchet", "Tool for cutting trees, axe or hatchet?", "hatchet", ActionType.Equip, ItemType.Tools, EquipmentType.HandRight);

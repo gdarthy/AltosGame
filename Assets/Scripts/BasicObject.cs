@@ -8,17 +8,17 @@ public class BasicObject : MonoBehaviour
     OptionPanelManager opm;
 
     [Header("BasicObject")]
-    [SerializeField]
-    private float _stoppingDistance;
+    //[SerializeField]
+    //private float _stoppingDistance;
+
+    bool implementsInteractable;
     bool rayCasted;
     private bool isTransparent;
-    private bool implementsInteractable = false;
-
-    public bool debugStoppingDistance = true;
+    //public bool debugStoppingDistance = false;
     
     // Get set
 
-    public float StoppingDistance
+   /* public float StoppingDistance
     {
         get
         {
@@ -28,19 +28,22 @@ public class BasicObject : MonoBehaviour
         {
             _stoppingDistance = value;
         }
-    }
+    }*/
 
-    void OnDrawGizmos()
+    /*void OnDrawGizmos()
     {
         if (debugStoppingDistance)
         {
             Handles.color = Color.yellow;
             Handles.DrawWireDisc(transform.position, Vector3.up, StoppingDistance);
         }
-    }
+    }*/
 
-    protected void Start()
+    protected virtual void Start() { }
+
+    protected virtual void Awake()
     {
+        implementsInteractable = false;
     }
 
     protected void Update()
@@ -90,7 +93,7 @@ public class BasicObject : MonoBehaviour
         gameObject.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
     }
 
-    public void ImplementsInteractable()
+    protected void ImplementsInteractable()
     {
         implementsInteractable = true;
     }
@@ -100,4 +103,8 @@ public class BasicObject : MonoBehaviour
         return implementsInteractable;
     }
 
+    public static GameObject GetObjectFromResources(ItemHolder item)
+    {
+        return Resources.Load<GameObject>("Objects/Items/" + item.itemType + "/" + item.itemResource);
+    }
 }

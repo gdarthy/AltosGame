@@ -11,8 +11,11 @@ public class PlayerUIMenu : MonoBehaviour {
         }
         else
         {
-            PlayerUIMenuManager.Instance.GetComponentInChildren<Text>().text = "";
-            PlayerUIMenuManager.Instance.MoveOut();
+            if (PlayerUIMenuManager.Instance != null)
+            {
+                PlayerUIMenuManager.Instance.GetComponentInChildren<Text>().text = "";
+                PlayerUIMenuManager.Instance.MoveOut();
+            }
         }
         	
 	}

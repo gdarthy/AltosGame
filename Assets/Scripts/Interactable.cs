@@ -1,23 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
-[RequireComponent(typeof(BasicObject))]
-public class Interactable : MonoBehaviour, IInteractable
+public class Interactable : BasicObject, IInteractable
 {
-
     [Header("Interactable")]
     protected GameObject optionItemPrefab;
     protected GameObject player;
 
     protected List<GameObject> options;
+    protected InteractableType interactableType;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         ImplementsInteractable();
         options = new List<GameObject>();
         optionItemPrefab = Resources.Load<GameObject>("UI/Option");
         player = GameObject.FindGameObjectWithTag("Player");
+        
+    }
+
+    public virtual void Alive(bool isKinematic, ItemHolder item)
+    {
+        ImplementsInteractable();
     }
 
     protected virtual void CallPlayer(Vector3 position)
@@ -54,12 +61,6 @@ public class Interactable : MonoBehaviour, IInteractable
         OptionPanelManager.Instance.OpenDialogueWindow();
     }
 
-    protected void ImplementsInteractable()
-    {
-        if (this is IInteractable)
-            GetComponent<BasicObject>().ImplementsInteractable();
-    }
-
     public void Interact(Vector3 position)
     {
         //default interaction
@@ -86,4 +87,18 @@ public class Interactable : MonoBehaviour, IInteractable
         player.GetComponent<PlayerMotor>().Reached -= new DestinationReached(PerformInteraction);
     }
 
+
+    public virtual InteractableType GetInteractableType()
+    {
+        return InteractableType.None;
+    }
+}
+
+public enum InteractableType
+{
+    None,
+    Extractable,
+    Pickable,
+    Attackable,
+    Lootable
 }

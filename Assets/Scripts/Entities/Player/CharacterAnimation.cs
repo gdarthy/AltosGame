@@ -24,7 +24,7 @@ public class CharacterAnimation : MonoBehaviour
         else
         {
             animator.SetBool("run", false);
-            navmeshAgent.stoppingDistance = 0.1f;
+            navmeshAgent.stoppingDistance = 1.5f;
         }
     }
 

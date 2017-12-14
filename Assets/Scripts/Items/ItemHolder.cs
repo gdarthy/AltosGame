@@ -26,12 +26,26 @@
         this.equipmentType = equipmentType;
     }
 
+    public void SwitchEquipAction()
+    {
+        if (actionType == ActionType.Equip)
+            actionType = ActionType.Unequip;
+        else
+            actionType = ActionType.Equip;
+    }
+
+    public static bool IsEquipable(ItemHolder item)
+    {
+        if (item.itemType == ItemType.Weapons || item.itemType == ItemType.Armor || item.itemType == ItemType.Tools) return true;
+        else return false;
+    }
 }
 
 public enum ActionType
 {
     Eat,
     Equip,
+    Unequip,
     Read,
     Drink
 }
