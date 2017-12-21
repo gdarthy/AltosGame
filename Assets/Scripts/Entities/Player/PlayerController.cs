@@ -7,10 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     public LayerMask movementMask;      // The ground
     public LayerMask interactionMask;   // Everything we can interact with
-
+    public LayerMask attackableMask;
+    public float mouseClickDistance;
     PlayerMotor motor;      // Reference to our motor
     Camera cam;             // Reference to our camera
-
+    RaycastHit hit;
 
     // Get references
     void Start()
@@ -19,7 +20,23 @@ public class PlayerController : MonoBehaviour
         cam = Camera.main;
     }
 
-    
+    void Interact()
+    {
+        hit.transform.GetComponent<Interactable>().Interact(gameObject);
+        GetComponent<PlayerMotor>().Reached -= new DestinationReached(Interact);
+    }
+
+    void Attack(RaycastHit hit)
+    {
+        if (hit.transform.GetComponent<Weapon>().longRangedWeapon)
+        {
+            hit.transform.GetComponent<Interactable>().Interact(gameObject);
+        }else
+        {
+            GetComponent<PlayerMotor>().Reached += new DestinationReached(Interact);
+            this.hit = hit;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -35,67 +52,36 @@ public class PlayerController : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            // If we hit
-            if (Physics.Raycast(ray, out hit, movementMask))
+            // If we hit walkable layer
+            if (Physics.Raycast(ray, out hit, mouseClickDistance, movementMask))
             {
-                //Debug.Log("Hit: " + hit.transform.name);
-                if (hit.transform.GetComponent<BasicObject>().IsInteractable())
+                GetComponent<PlayerMotor>().Reached -= new DestinationReached(Interact);
+                motor.MoveToObject(hit.point, false);
+            }
+            // If we hit interactable layer
+            if (Physics.Raycast(ray, out hit, mouseClickDistance, interactionMask))
+            {
+                if (hit.transform.GetComponent<Interactable>().requiredTool == ToolType.None 
+                    || PlayerEquipment.Instance.HasTool(hit.transform.GetComponent<Interactable>().requiredTool))
                 {
-                    IInteractable _object = hit.transform.GetComponent<IInteractable>();
-                    switch (_object.GetInteractableType())
-                    {
-                        case InteractableType.None:
-                            Debug.Log("Interaction not set");
-                            break;
-                        case InteractableType.Extractable:
-                            Item inRightHand = GetComponent<Equipment>().GetEquipedItem(EquipmentType.HandRight);
-                            Item inLeftHand = GetComponent<Equipment>().GetEquipedItem(EquipmentType.HandLeft);
-                            Tool tool = null;
-                            if (inRightHand != null && inRightHand.itemHolder.itemType == ItemType.Tools)
-                            {
-                                Debug.Log("Tool in right");
-                                tool = (Tool)inRightHand;
-                            }else
-                            {
-                                if (inLeftHand != null && inLeftHand.itemHolder.itemType == ItemType.Tools)
-                                {
-                                    Debug.Log("Tool in left");
-                                    tool = (Tool)inLeftHand;
-                                }
-                                else
-                                {
-                                    Debug.Log("No Tool!");
-                                    tool = null;
-                                }
-                            }
-                            if (tool != null && hit.transform.GetComponent<IExtractable>().GetRequiredTool() == tool.toolType)
-                            {
-                                _object.Interact(hit.point);
-                            }
-
-                            break;
-                        case InteractableType.Pickable:
-                            _object.Interact(hit.point);
-                            break;
-                        case InteractableType.Attackable:
-                            break;
-                        case InteractableType.Lootable:
-                            _object.Interact(hit.point);
-                            break;
-                        default:
-                            break;
-                    }
-                    //
-                }
-                else
-                {
+                    GetComponent<PlayerMotor>().Reached += new DestinationReached(Interact);
                     motor.MoveToObject(hit.point, false);
+                    this.hit = hit;
+                }else
+                {
+                    Debug.Log("No required tool");
+                    GetComponent<PlayerMotor>().Reached -= new DestinationReached(Interact);
+                    // TODO Popup no required tool
                 }
-                //SetFocus(null);
+            }
+
+            // If we hit attackable layer
+            if (Physics.Raycast(ray, out hit, mouseClickDistance, attackableMask))
+            {
+                GetComponent<PlayerMotor>().Reached -= new DestinationReached(Interact);
+                Attack(hit);
             }
         }
-
-        
 
         // If we press right mouse
         if (Input.GetMouseButtonDown(1))
@@ -105,37 +91,30 @@ public class PlayerController : MonoBehaviour
             RaycastHit hit;
 
             // If we hit
-            if (Physics.Raycast(ray, out hit, interactionMask))
+            if (Physics.Raycast(ray, out hit, mouseClickDistance, interactionMask | attackableMask))
             {
-                if (hit.transform.GetComponent<BasicObject>().IsInteractable())
-                {
-                    hit.transform.GetComponent<IInteractable>().ShowGUI(hit.point);
-                }else
-                {
-                    Debug.Log("Hit object is not interactable");
-                }
-                
+                hit.transform.GetComponent<IInteractable>().ShowGUI();
             }
         }
 
-        
+
 
     }
+}
 
-
-    /* Focus
+/* Focus
 // If we press right mouse
 if (Input.GetMouseButtonDown(1))
 {
-   // Shoot out a ray
-   Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-   RaycastHit hit;
+// Shoot out a ray
+Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+RaycastHit hit;
 
-   // If we hit
-   if (Physics.Raycast(ray, out hit, 100f, interactionMask))
-   {
-       SetFocus(hit.collider.GetComponent<Interactable>());
-   }
+// If we hit
+if (Physics.Raycast(ray, out hit, 100f, interactionMask))
+{
+   SetFocus(hit.collider.GetComponent<Interactable>());
+}
 }
 
 }
@@ -145,13 +124,13 @@ if (Input.GetMouseButtonDown(1))
 void SetFocus(Interactable newFocus)
 {
 if (onFocusChangedCallback != null)
-   onFocusChangedCallback.Invoke(newFocus);
+onFocusChangedCallback.Invoke(newFocus);
 
 // If our focus has changed
 if (focus != newFocus && focus != null)
 {
-   // Let our previous focus know that it's no longer being focused
-   focus.OnDefocused();
+// Let our previous focus know that it's no longer being focused
+focus.OnDefocused();
 }
 
 // Set our focus to what we hit
@@ -160,13 +139,67 @@ focus = newFocus;
 
 if (focus != null)
 {
-   // Let our focus know that it's being focused
-   focus.OnFocused(transform);
+// Let our focus know that it's being focused
+focus.OnFocused(transform);
 }
 
 }
 */
-}
+
+/*
+            //Debug.Log("Hit: " + hit.transform.name);
+            if (hit.transform.GetComponent<Interactable>() != null)
+            {
+                IInteractable _object = hit.transform.GetComponent<IInteractable>();
+                switch (_object.GetInteractableType())
+                {
+                    case InteractableType.None:
+                        Debug.Log("Does object have ItemInteractable?");
+                        break;
+                    case InteractableType.Extractable:
+
+                        /*Item inRightHand = GetComponent<PlayerEquipment>().GetEquipedItem(EquipmentType.HandRight);
+                        Item inLeftHand = GetComponent<PlayerEquipment>().GetEquipedItem(EquipmentType.HandLeft);
+                        ToolObject tool = null;
+                        if (inRightHand != null && inRightHand.item.itemType == ItemType.Tools)
+                        {
+                            //Debug.Log("Tool in right");
+                            tool = (ToolObject)inRightHand;
+                        }else
+                        {
+                            if (inLeftHand != null && inLeftHand.item.itemType == ItemType.Tools)
+                            {
+                                Debug.Log("Tool in left");
+                                tool = (ToolObject)inLeftHand;
+                            }
+                            else
+                            {
+                                Debug.Log("No Tool!");
+                                tool = null;
+                            }
+                        }
+                        if (tool != null && hit.transform.GetComponent<IExtractable>().GetRequiredTool() == tool.toolType)
+                        {
+                            _object.Interact(hit.point);
+                        }
+
+                        break;
+                    case InteractableType.Pickable:
+                        _object.Interact(hit.point);
+                        break;
+                    case InteractableType.Attackable:
+                        break;
+                    case InteractableType.Lootable:
+                        _object.Interact(hit.point);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+
+            }*/
 
 /* Old controller
  * {

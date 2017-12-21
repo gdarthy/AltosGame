@@ -102,9 +102,4 @@ public class BasicObject : MonoBehaviour
     {
         return implementsInteractable;
     }
-
-    public static GameObject GetObjectFromResources(ItemHolder item)
-    {
-        return Resources.Load<GameObject>("Objects/Items/" + item.itemType + "/" + item.itemResource);
-    }
 }

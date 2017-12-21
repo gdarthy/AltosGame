@@ -3,23 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Extractable : Interactable, IExtractable {
-    
-    protected ToolType requiredTool;
+public class Extractable : Interactable {
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
-        interactableType = InteractableType.Extractable;
+        base.Awake();
     }
 
-    public override InteractableType GetInteractableType()
-    {
-        return interactableType;
-    }
-
-    public virtual ToolType GetRequiredTool()
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -2,36 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
 public class InventoryManager : MonoBehaviour, IPointerClickHandler
 {
 
     public static InventoryManager Instance { get; private set; }
 
     InventoryGUIManager inventoryGUIManager;
-    IStorage nonPlayerInventory;
+    Inventory nonPlayerInventory;
 
     List<ItemContainer> itemContainers = new List<ItemContainer>();
 
     Details detailsPanel;
-    public Transform toggles;
-    ItemContainer selected;
+    public Toggles toggles;
+    ItemContainer itemContainer;
     bool inNonPlayerInventory;
     bool anotherInventory = false;
-
     bool debugging = false;
 
     void Awake()
     {
         if (Instance == null)
-            //if not, set instance to this
             Instance = this;
-        //If instance already exists and it's not this:
         else if (Instance != this)
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
-
         //Sets this to not be destroyed when reloading scene
         //DontDestroyOnLoad(gameObject);
+
         inventoryGUIManager = GetComponent<InventoryGUIManager>();
         inventoryGUIManager.HideInventory();
     }
@@ -49,11 +47,15 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
         detailsPanel = GameObject.Find("Details").GetComponent<Details>();
     }
 
-    public void OpenInventory(IStorage nonPlayerInventory)
+    public void OpenInventory(Inventory nonPlayerInventory)
     {
         _Debug("OpenInventory(IStorage)");
         this.nonPlayerInventory = nonPlayerInventory;
-        UpdateList(nonPlayerInventory.GetItemList());
+        UpdateList(nonPlayerInventory, true);
+        if (nonPlayerInventory.GetItemList().Count > 0)
+        {
+            inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, true);
+        }
         inNonPlayerInventory = true;
         anotherInventory = true;
         inventoryGUIManager.InventorySelectionPanel(false);
@@ -63,7 +65,7 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
     public void OpenInventory()
     {
         _Debug("OpenInventory()");
-        UpdateList(PlayerInventoryHolder.Instance.GetItemList());
+        UpdateList(PlayerInventoryHolder.Instance, true);
         inNonPlayerInventory = false;
         anotherInventory = false;
         inventoryGUIManager.InventorySelectionPanel(true);
@@ -75,30 +77,49 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
         _Debug("PlayerInventory()");
         inNonPlayerInventory = false;
         inventoryGUIManager.HideAllButtons();
-        inventoryGUIManager.HideTakeAllButton();
-        UpdateList(PlayerInventoryHolder.Instance.GetItemList());
+        inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, false);
+        UpdateList(PlayerInventoryHolder.Instance, true);
+        if (PlayerInventoryHolder.Instance.GetItemList().Count > 0)
+        {
+            inventoryGUIManager.EnableButton(InventoryButton.StoreEverything, true);
+        }
     }
 
     public void NonPlayerInventory()
     {
         _Debug("NonPlayerInventory()");
         inNonPlayerInventory = true;
-        UpdateList(nonPlayerInventory.GetItemList());
+        UpdateList(nonPlayerInventory, true);
         inventoryGUIManager.HideAllButtons();
-        inventoryGUIManager.ShowTakeAllButton();
+        inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, false);
+        if (nonPlayerInventory.GetItemList().Count > 0)
+        {
+            inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, true);
+        }
     }
 
-    void SetToggles(List<ItemHolder> itemList)
+    void SetToggles(Inventory inventory)
     {
         _Debug("SetToggles(List<ItemHolder>)");
-        foreach (Transform item in toggles)
+
+        toggles.ResetActive();
+        if (!inNonPlayerInventory)
         {
-            item.GetComponent<Toggle>().isOn = false;
+            inventoryGUIManager.SetTogglesMask(false);
+            toggles.SetFavoriteToggles();
         }
-        foreach (ItemHolder item in itemList)
+        else
         {
-            toggles.Find(item.itemType.ToString()).GetComponent<Toggle>().isOn = true;
+            inventoryGUIManager.SetTogglesMask(true);
+            toggles.ResetFavoriteToggles();
+            foreach (Item item in inventory.GetItemList())
+            {
+                if (item != null)
+                    toggles.SetActiveToggle(inventory.GetItemInstance(item).itemType.ToString());
+                else Debug.Log("Item null");
+            }
         }
+
     }
 
     void ClearInventoryItemList()
@@ -111,22 +132,23 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
         itemContainers.Clear();
     }
 
-    void CreateInventoryItemList(List<ItemHolder> itemList)
+    void CreateInventoryItemList(Inventory inventory)
     {
-        _Debug("CreateInventoryItemList(List<ItemHolder>)");
+        List<Item> itemList = inventory.GetItemList();
         if (itemList.Count > 0)
         {
-            _Debug("-ItemList count " + itemList.Count);
-            foreach (ItemHolder item in itemList)
+            foreach (Item item in itemList)
             {
-                if (item != null)
+                ItemContainer temp = GetItemContainer(item.itemName);
+                if (temp == null)
                 {
-                    AddItem(item);
-                }
-                else
+                    ItemContainer itemContainer = Instantiate(Resources.Load<ItemContainer>("UI/Item"), inventoryGUIManager.GetPanel(item.itemType));
+                    itemContainer.AddToStack(item);
+                    itemContainers.Add(itemContainer);
+                }else
                 {
-                    Debug.Log("--Item is null");
-                    break;
+                    temp.AddToStack(item);
+                    itemContainers.Add(temp);
                 }
             }
         }
@@ -137,118 +159,176 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
 
     }
 
-    void AddItem(ItemHolder item)
+    ItemContainer GetItemContainer(string name)
     {
-        _Debug("AddItem(ItemHolder)");
-        ItemContainer temp = null;
-        ItemContainer itemContainer = Resources.Load<ItemContainer>("UI/Item");
-        if (itemContainer != null || item != null)
+        foreach (ItemContainer ic in itemContainers)
         {
-            temp = Instantiate(itemContainer, GameObject.Find(item.itemType + "Panel").transform);
-            temp.InitItemContainer(item);
-            itemContainers.Add(temp);
+            if (ic.itemName == name)
+            {
+                return ic;
+            }
         }
-        else
-        {
-            Debug.Log("Something is null" + temp + "or " + item);
-        }
+        return null;
     }
 
     public void OnSelect(ItemContainer itemContainer)
     {
-        selected = itemContainer;
-        ShowDetails(selected.Item);
+        Item item = itemContainer.GetItem();
+        ShowDetails(item);
         if (inNonPlayerInventory)
         {
-            inventoryGUIManager.ShowTakeButton();
+            inventoryGUIManager.EnableButton(InventoryButton.Take, true);
+            inventoryGUIManager.EnableButton(InventoryButton.TakeAll, true);
         }
         else
         {
+            inventoryGUIManager.HideAllButtons();
             if (anotherInventory)
-                inventoryGUIManager.ShowStoreButton();
-            inventoryGUIManager.ShowUseButton();
-            inventoryGUIManager.ShowRemoveButton();
+            {
+                inventoryGUIManager.EnableButton(InventoryButton.Store, true);
+                if (itemContainer.amount > 1)
+                {
+                    inventoryGUIManager.EnableButton(InventoryButton.StoreAll, true);
+                }
+            }
+            else
+            {
+                if (itemContainer.amount > 1)
+                    inventoryGUIManager.EnableButton(InventoryButton.RemoveAll, true);
+                else
+                    inventoryGUIManager.EnableButton(InventoryButton.RemoveAll, false);
+                inventoryGUIManager.EnableButton(InventoryButton.Remove, true);
+                if (item.itemType == ItemType.Weapons || item.itemType == ItemType.Tools || item.itemType == ItemType.Armor)
+                {
+                    bool isEquipped = ((Equipment)item).isEquipped;
+                    if (isEquipped)
+                    {
+                        inventoryGUIManager.EnableButton(InventoryButton.Equip, !isEquipped);
+                        inventoryGUIManager.EnableButton(InventoryButton.Unequip, isEquipped);
+                    }
+                    else
+                    {
+                        inventoryGUIManager.EnableButton(InventoryButton.Equip, !isEquipped);
+                        inventoryGUIManager.EnableButton(InventoryButton.Unequip, isEquipped);
+                    }
+                }
+            }
         }
     }
 
     public void OnDeselect()
     {
-        selected = null;
+        itemContainer = null;
         inventoryGUIManager.HideAllButtons();
         if (!inNonPlayerInventory || itemContainers.Count == 0)
         {
-            inventoryGUIManager.HideTakeAllButton();
+            inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, false);
         }
         detailsPanel.SetDefault();
     }
 
-    void ShowDetails(ItemHolder item)
+    void ShowDetails(Item item)
     {
-        inventoryGUIManager.SetUseAction(item.actionType.ToString());
         detailsPanel.SetDetails(item.itemName, item.itemDescription, "");
     }
 
     public void Take()
     {
-        if (selected != null)
+        if (itemContainer != null)
         {
-            PlayerInventoryHolder.Instance.AddItemToInventory(selected.Item);
-            nonPlayerInventory.RemoveItemFromStorage(selected.Item);
-            UpdateList(nonPlayerInventory.GetItemList());
+            PlayerInventoryHolder.Instance.AddItem(itemContainer.GetItem());
+            nonPlayerInventory.RemoveItem(itemContainer.GetItem());
+            UpdateList(nonPlayerInventory, true);
         }
     }
 
     public void TakeAll()
     {
-        foreach (ItemHolder item in nonPlayerInventory.GetItemList())
+        if (itemContainer != null)
         {
-            PlayerInventoryHolder.Instance.AddItemToInventory(item);
+            PlayerInventoryHolder.Instance.AddWholeStack(itemContainer.GetItem(), nonPlayerInventory.GetItemList());
+            nonPlayerInventory.RemoveWholeStack(itemContainer.GetItem());
+            UpdateList(nonPlayerInventory, true);
         }
-        inventoryGUIManager.HideTakeAllButton();
+    }
+
+    public void TakeEverything()
+    {
+        foreach (Item item in nonPlayerInventory.GetItemList())
+        {
+            PlayerInventoryHolder.Instance.AddWholeStack(nonPlayerInventory.GetItemInstance(item), nonPlayerInventory.GetItemList());
+        }
+        inventoryGUIManager.EnableButton(InventoryButton.TakeEverything, false);
         nonPlayerInventory.RemoveAllItems();
-        UpdateList(nonPlayerInventory.GetItemList());
+        UpdateList(nonPlayerInventory, true);
     }
 
     public void Use()
     {
-        switch (selected.Item.actionType)
-        {
-            case ActionType.Eat:
-                break;
-            case ActionType.Equip:
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Equipment>().Equip(selected.Item);
-                inventoryGUIManager.SetUseAction(selected.Item.actionType.ToString());
-                break;
-            case ActionType.Unequip:
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Equipment>().Unequip(selected.Item);
-                inventoryGUIManager.SetUseAction(selected.Item.actionType.ToString());
-                break;
-            case ActionType.Read:
-                break;
-            case ActionType.Drink:
-                break;
-            default:
-                break;
-        }
+
+    }
+
+    // TODO Update Equipping
+    public void Equip(bool hand)
+    {
+        PlayerEquipment.Instance.Equip((Weapon)itemContainer.GetItem(), (hand ? EquipmentType.RightHand : EquipmentType.LeftHand));
+        UpdateList(PlayerInventoryHolder.Instance, true);
+    }
+
+    public void Unequip()
+    {
+        PlayerEquipment.Instance.Unequip((Equipment)itemContainer.GetItem());
+        UpdateList(PlayerInventoryHolder.Instance, true);
     }
 
     public void Remove()
     {
-        if (selected != null)
+        if (itemContainer != null)
         {
-            PlayerInventoryHolder.Instance.DropItem(selected.Item);
-            UpdateList(PlayerInventoryHolder.Instance.GetItemList());
+            PlayerInventoryHolder.Instance.DropItem(itemContainer.GetItem());
+            UpdateList(PlayerInventoryHolder.Instance, true);
+        }
+    }
+
+    public void RemoveAll()
+    {
+        if (itemContainer != null)
+        {
+            PlayerInventoryHolder.Instance.DropAllItems(itemContainer.GetItem());
+            UpdateList(PlayerInventoryHolder.Instance, true);
         }
     }
 
     public void Store()
     {
-        if (selected != null)
+        if (itemContainer != null)
         {
-            nonPlayerInventory.AddItemToStorage(selected.Item);
-            PlayerInventoryHolder.Instance.RemoveItemFromInventory(selected.Item);
-            UpdateList(PlayerInventoryHolder.Instance.GetItemList());
+            PlayerEquipment.Instance.UnequipIfNecessary(itemContainer.GetItem());
+            nonPlayerInventory.AddItem(itemContainer.GetItem());
+            PlayerInventoryHolder.Instance.RemoveItem(itemContainer.GetItem());
+            UpdateList(PlayerInventoryHolder.Instance, true);
         }
+    }
+
+    public void StoreAll()
+    {
+        if (itemContainer != null)
+        {
+            nonPlayerInventory.AddWholeStack(itemContainer.GetItem(), PlayerInventoryHolder.Instance.GetItemList());
+            PlayerInventoryHolder.Instance.RemoveWholeStack(itemContainer.GetItem());
+            UpdateList(PlayerInventoryHolder.Instance, true);
+        }
+    }
+
+    public void StoreEverything()
+    {
+        foreach (Item item in PlayerInventoryHolder.Instance.GetItemList())
+        {
+            if (!PlayerEquipment.Instance.IsEquipped(PlayerInventoryHolder.Instance.GetItemInstance(item)))
+                nonPlayerInventory.AddWholeStack(PlayerInventoryHolder.Instance.GetItemInstance(item), PlayerInventoryHolder.Instance.GetItemList());
+        }
+        PlayerInventoryHolder.Instance.RemoveUnequipped(); // TODO removes items that are equipped 
+        UpdateList(PlayerInventoryHolder.Instance, true);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -256,13 +336,29 @@ public class InventoryManager : MonoBehaviour, IPointerClickHandler
         OnDeselect();
     }
 
-    void UpdateList(List<ItemHolder> itemList)
+    void UpdateList(Inventory inventory, bool deselect)
     {
-        _Debug("UpdateList(List<ItemHolder>)");
         ClearInventoryItemList();
-        SetToggles(itemList);
-        CreateInventoryItemList(itemList);
+        SetToggles(inventory);
+        CreateInventoryItemList(inventory);
         OnDeselect();
+    }
+
+    void Update()
+    {
+        if (inventoryGUIManager.IsShown() && !inNonPlayerInventory && itemContainer != null &&
+            (itemContainer.GetItem().itemType == ItemType.Weapons || itemContainer.GetItem().itemType == ItemType.Tools))
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Equip(false); // false for left hand
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                Equip(true); // true for right hand
+            }
+
+        }
     }
 
 }

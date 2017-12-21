@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public interface IStorage  {
 
 
-    List<ItemHolder> GetItemList();
-    void AddItemToStorage(ItemHolder item);
-    void RemoveItemFromStorage(ItemHolder item);
+    Hashtable GetItemList();
+    void AddItemToStorage(Item item);
+    void RemoveItemFromStorage(Item item);
     void RemoveAllItems();
     string GetStorageName();
 }

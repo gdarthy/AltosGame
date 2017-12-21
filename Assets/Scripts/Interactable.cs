@@ -3,102 +3,49 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 
-public class Interactable : BasicObject, IInteractable
+public class Interactable : MonoBehaviour, IInteractable
 {
     [Header("Interactable")]
     protected GameObject optionItemPrefab;
-    protected GameObject player;
-
     protected List<GameObject> options;
-    protected InteractableType interactableType;
+    public ToolType requiredTool { get; protected set;}
 
-    protected override void Start()
+    protected virtual void Awake()
     {
-        base.Start();
-        ImplementsInteractable();
         options = new List<GameObject>();
         optionItemPrefab = Resources.Load<GameObject>("UI/Option");
-        player = GameObject.FindGameObjectWithTag("Player");
-        
+        gameObject.layer = 11;
     }
-
-    public virtual void Alive(bool isKinematic, ItemHolder item)
-    {
-        ImplementsInteractable();
-    }
-
-    protected virtual void CallPlayer(Vector3 position)
-    {
-        player.GetComponent<PlayerMotor>().MoveToObject(transform.position, true);
-    }
-
-
-    protected virtual void PerformInteraction()
-    {
-        RemoveEventListener();
-        //perform default interaction
-    }
-
-    protected virtual void CreateOptions(Vector3 position)
-    {
-        AddWalkHereButton(position);
-    }
-
-    protected void AddWalkHereButton(Vector3 position)
-    {
-        GameObject option = Instantiate(optionItemPrefab);
-        option.GetComponent<Text>().text = "Walk Here";
-        option.GetComponent<Button>().onClick.AddListener(() => { OptionPanelManager.Instance.CloseDialogueWindow(); });
-        option.GetComponent<Button>().onClick.AddListener(() => { CallPlayer(position); });
-        options.Add(option);
-    }
-
-    public void ShowGUI(Vector3 position)
+    public void ShowGUI()
     {
         options.Clear();
-        CreateOptions(position);
+        CreateOptions();
         OptionPanelManager.Instance.SetOptions(options);
         OptionPanelManager.Instance.OpenDialogueWindow();
     }
 
-    public void Interact(Vector3 position)
+    protected virtual void CreateOptions()
     {
-        //default interaction
-        CallPlayer(position);
-        AddEventListener();
+        AddWalkHereButton();
     }
+    public virtual void Interact(GameObject character)
+    {
 
-    protected void AddInteractionButton(Vector3 position, string buttonName)
+    }
+    protected void AddWalkHereButton()
+    {
+        GameObject option = Instantiate(optionItemPrefab);
+        option.GetComponent<Text>().text = "Walk Here";
+        option.GetComponent<Button>().onClick.AddListener(() => { OptionPanelManager.Instance.CloseDialogueWindow(); });
+        //option.GetComponent<Button>().onClick.AddListener(() => { CallPlayer(); });
+        options.Add(option);
+    }
+    protected void AddInteractionButton(string buttonName)
     {
         GameObject option = Instantiate(optionItemPrefab);
         option.GetComponent<Text>().text = buttonName;
         option.GetComponent<Button>().onClick.AddListener(() => { OptionPanelManager.Instance.CloseDialogueWindow(); });
-        option.GetComponent<Button>().onClick.AddListener(() => { Interact(position); });
+        //option.GetComponent<Button>().onClick.AddListener(() => { Interact(); });
         options.Add(option);
     }
-
-    protected void AddEventListener()
-    {
-        player.GetComponent<PlayerMotor>().Reached += new DestinationReached(PerformInteraction);
-    }
-
-    protected void RemoveEventListener()
-    {
-        player.GetComponent<PlayerMotor>().Reached -= new DestinationReached(PerformInteraction);
-    }
-
-
-    public virtual InteractableType GetInteractableType()
-    {
-        return InteractableType.None;
-    }
-}
-
-public enum InteractableType
-{
-    None,
-    Extractable,
-    Pickable,
-    Attackable,
-    Lootable
 }

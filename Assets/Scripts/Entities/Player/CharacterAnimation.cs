@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public delegate void StoppingAllAnimations();
 public class CharacterAnimation : MonoBehaviour
 {
 
     Animator animator;
     NavMeshAgent navmeshAgent;
+
+    public event StoppingAllAnimations Stopped;
 
     void Start()
     {
@@ -28,15 +31,23 @@ public class CharacterAnimation : MonoBehaviour
         }
     }
 
-    public void CuttingOneHand(bool animate)
+    public void CuttingRightHand(bool animate)
     {
-        Debug.Log("Cutting animation enabled");
-        animator.SetBool("cutOneHand", animate);
+        animator.SetBool("cutRightHand", animate);
+    }
+
+    public void CuttingLeftHand(bool animate)
+    {
+        animator.SetBool("cutLeftHand", animate);
     }
 
     public void StopAllAnimations()
     {
-        animator.SetBool("cutOneHand", false);
+        //Debug.Log("Stop all animations");
+        if (Stopped != null) Stopped();
+        //Debug.Log("Again");
+        animator.SetBool("cutRightHand", false);
+        animator.SetBool("cutLeftHand", false);
     }
 
 }

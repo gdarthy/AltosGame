@@ -6,26 +6,22 @@ public class ItemsStorage : Interactable
     [Header("ItemsStorage")]
     public InventoryManager inventory;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
-        interactableType = InteractableType.Lootable;
+        base.Awake();
+        requiredTool = ToolType.None;
     }
 
-    public override InteractableType GetInteractableType()
+    public override void Interact(GameObject character)
     {
-        return interactableType;
+        base.Interact(character);
+        inventory.OpenInventory(GetComponent<Inventory>());
+        //RemoveEventListener();
     }
 
-    protected override void PerformInteraction()
+    protected override void CreateOptions()
     {
-        inventory.OpenInventory(GetComponent<IStorage>());
-        RemoveEventListener();
-    }
-
-    protected override void CreateOptions(Vector3 position)
-    {
-        AddWalkHereButton(position);
-        AddInteractionButton(position, "Use");
+        AddWalkHereButton();
+        AddInteractionButton("Use");
     }
 }
